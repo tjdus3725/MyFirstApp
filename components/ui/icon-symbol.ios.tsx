@@ -1,6 +1,7 @@
 import { SymbolView, SymbolViewProps, SymbolWeight } from 'expo-symbols';
 import { StyleProp, ViewStyle } from 'react-native';
 
+//tab바 아이콘 심볼(iOS)
 export function IconSymbol({
   name,
   size = 24,

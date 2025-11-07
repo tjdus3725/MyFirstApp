@@ -2,6 +2,7 @@ import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 import { PlatformPressable } from '@react-navigation/elements';
 import * as Haptics from 'expo-haptics';
 
+//커스텀 탭 버튼을 생성
 export function HapticTab(props: BottomTabBarButtonProps) {
   return (
     <PlatformPressable

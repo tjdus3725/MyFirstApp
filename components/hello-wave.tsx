@@ -1,5 +1,6 @@
 import Animated from 'react-native-reanimated';
 
+//손 흔드는 이모지
 export function HelloWave() {
   return (
     <Animated.Text
