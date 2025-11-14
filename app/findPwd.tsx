@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import {
   Alert // 알림창 추가
   ,
+
   ScrollView,
   StatusBar,
   StyleSheet,
