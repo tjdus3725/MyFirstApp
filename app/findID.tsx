@@ -1,9 +1,7 @@
-import { useRouter } from 'expo-router'; // 페이지 이동을 위해 import
+import { useRouter } from 'expo-router'; // 페이지 이동
 import React, { useState } from 'react';
 import {
-  Alert // 알림창 추가
-  ,
-
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -14,15 +12,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function FindIdScreen() {
-  const router = useRouter(); // router 사용
+  const router = useRouter(); 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
   // '아이디 조회하기' 버튼 클릭 시 실행
   const handleFindId = () => {
-    // (나중에 실제 아이디 찾는 로직 추가)
-
-    // 임시로 알림창 띄우고 로그인 페이지로 이동
     Alert.alert(
       "아이디 조회",
       "아이디 조회가 완료되었습니다. 로그인 페이지로 이동합니다.",
@@ -59,7 +54,7 @@ export default function FindIdScreen() {
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
-          onPress={handleFindId} // 버튼에 함수 연결
+          onPress={handleFindId}
         >
           <Text style={styles.buttonText}>아이디 조회하기</Text>
         </TouchableOpacity>
@@ -69,7 +64,7 @@ export default function FindIdScreen() {
   );
 }
 
-// 스타일 시트 (로그인/회원가입과 거의 동일)
+// 스타일 시트
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -97,7 +92,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   button: {
-    backgroundColor: '#6A5AE0',
+    backgroundColor: '#4966d5',
     paddingVertical: 15,
     borderRadius: 30,
     marginTop: 20,

@@ -1,11 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert //완료 알림창
-  ,
-
-
-
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -26,9 +22,6 @@ export default function SignupScreen() {
   const [lab, setLab] = useState('');
 
   const handleSignUp = () => {
-    // (나중에 여기에 아이디 중복확인, 비밀번호 일치 여부 등 로직 추가)
-
-    // 1. 완료 알림창 띄우기 (선택 사항)
     Alert.alert(
       "회원가입 완료",
       "로그인 화면으로 이동합니다.",
@@ -42,8 +35,6 @@ export default function SignupScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
-      {/* 2. View 대신 ScrollView를 사용합니다. */}
-      {/* contentContainerStyle을 사용해 내부 요소를 중앙 정렬합니다. */}
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled" // 키보드 외 영역 터치 시 키보드 닫기
@@ -53,7 +44,7 @@ export default function SignupScreen() {
         {/* 아이디 + 중복확인 버튼 */}
         <View style={styles.inputRow}>
           <TextInput
-            style={styles.inputInRow} // 3. 행 내부의 TextInput 스타일
+            style={styles.inputInRow} 
             placeholder="아이디"
             placeholderTextColor="#AAAAAA"
             value={id}
@@ -133,10 +124,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   container: {
-    flexGrow: 1, // 4. ScrollView에서 flex: 1 대신 flexGrow: 1 사용
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 30, // 스크롤을 위해 상하 패딩 추가
+    paddingVertical: 30, 
     paddingHorizontal: 20,
   },
   title: {
@@ -145,7 +136,7 @@ const styles = StyleSheet.create({
     color: '#3F3D56',
     marginBottom: 40,
   },
-  // 5. 아이디 + 중복확인 버튼 행 스타일
+  // 아이디 + 중복확인 버튼 행 스타일
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -154,14 +145,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E0E0E0',
     marginBottom: 25,
   },
-  // 6. 행 내부의 TextInput 스타일 (flex: 1로 공간 차지)
+  // 행 내부의 TextInput 스타일 (flex: 1로 공간 차지)
   inputInRow: {
     flex: 1,
     height: 50,
     fontSize: 16,
     paddingLeft: 5,
   },
-  // 7. 중복확인 버튼 스타일
+  // 중복확인 버튼 스타일
   checkButton: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
@@ -175,7 +166,7 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontSize: 13,
   },
-  // 8. 일반 TextInput 스타일
+  // 일반 TextInput 스타일
   input: {
     width: '90%',
     height: 50,
@@ -185,9 +176,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 5,
   },
-  // 9. 메인 회원가입 버튼
+  // 메인 회원가입 버튼
   button: {
-    backgroundColor: '#6A5AE0',
+    backgroundColor: '#4966d5',
     paddingVertical: 15,
     borderRadius: 30,
     marginTop: 20,

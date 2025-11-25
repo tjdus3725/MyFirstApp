@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import React from 'react';
 import {
   StatusBar,
@@ -6,10 +7,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-// 1. SafeAreaView import 경로 확인
 import { SafeAreaView } from 'react-native-safe-area-context';
-// 2. Link를 import 했는지 확인
-import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   return (
@@ -26,7 +24,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </Link>
 
-        {/* 3. 회원가입 버튼도 Link로 감쌌는지 확인! */}
+        {/* 3. 회원가입 버튼 링크 */}
         <Link href="/signup" asChild>
           <TouchableOpacity style={styles.button} activeOpacity={0.8}>
             <Text style={styles.buttonText}>회원가입</Text>
@@ -38,7 +36,7 @@ export default function HomeScreen() {
   );
 }
 
-// 스타일 시트는 그대로 둡니다.
+// 스타일 시트
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   button: {
-    backgroundColor: '#6A5AE0',
+    backgroundColor: '#4966d5',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 30,

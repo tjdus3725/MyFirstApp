@@ -175,9 +175,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  // 카드 스타일 (프로필, 주문 등)
+  // 섹션 스타일 (프로필, 주문 등)
   card: {
-    backgroundColor: '#F5F7FA', // 연한 회색 배경 (이미지의 bg-color-duplicate 대체)
+    backgroundColor: '#F5F7FA', 
     borderRadius: 20,
     padding: 25,
   },

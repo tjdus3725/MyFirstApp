@@ -1,9 +1,7 @@
-import { useRouter } from 'expo-router'; // 페이지 이동을 위해 import
+import { useRouter } from 'expo-router'; // 페이지 이동
 import React, { useState } from 'react';
 import {
-  Alert // 알림창 추가
-  ,
-
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -14,16 +12,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function FindPasswordScreen() {
-  const router = useRouter(); // router 사용
+  const router = useRouter();
   const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [phone, setPhone] = useState('');
 
-  // '비밀번호 변경' 버튼 클릭 시 실행
+  // 비밀번호 변경 버튼 클릭 시 실행
   const handleChangePassword = () => {
-    // (나중에 실제 비밀번호 변경 로직 추가)
-
-    // 임시로 알림창 띄우고 로그인 페이지로 이동
     Alert.alert(
       "비밀번호 변경",
       "비밀번호 변경이 완료되었습니다. 로그인 페이지로 이동합니다.",
@@ -68,7 +63,7 @@ export default function FindPasswordScreen() {
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
-          onPress={handleChangePassword} // 버튼에 함수 연결
+          onPress={handleChangePassword}
         >
           <Text style={styles.buttonText}>비밀번호 변경</Text>
         </TouchableOpacity>
@@ -78,7 +73,7 @@ export default function FindPasswordScreen() {
   );
 }
 
-// 스타일 시트 (findId.tsx와 동일)
+// 스타일 시트
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -106,7 +101,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   button: {
-    backgroundColor: '#6A5AE0',
+    backgroundColor: '#4966d5',
     paddingVertical: 15,
     borderRadius: 30,
     marginTop: 20,
