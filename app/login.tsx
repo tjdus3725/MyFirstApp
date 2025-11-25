@@ -1,5 +1,7 @@
+import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  Alert,
   StatusBar,
   StyleSheet,
   Text,
@@ -7,15 +9,32 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-// 1. 'react-native-safe-area-context'에서 SafeAreaView를 import 합니다.
 import { SafeAreaView } from 'react-native-safe-area-context';
-// 2. Link만 import 하고, 사용하지 않는 useRouter는 제거했습니다.
-import { Link } from 'expo-router';
 
 export default function LoginScreen() {
-  // 3. 사용하지 않는 router 변수를 제거했습니다.
+  const router = useRouter();
+
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    //빈 값 체크
+    if (id.trim() === '') {
+      Alert.alert('알림', '아이디를 입력해주세요.');
+      return;
+    }
+    if (password.trim() === '') {
+      Alert.alert('알림', '비밀번호를 입력해주세요.');
+      return;
+    }
+
+    Alert.alert('환영합니다', '로그인에 성공하였습니다.', [
+      {
+        text: '확인',
+        onPress: () => router.replace('/home')
+      }
+    ]);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -31,6 +50,7 @@ export default function LoginScreen() {
           placeholderTextColor="#AAAAAA"
           value={id}
           onChangeText={setId}
+          autoCapitalize="none" // 아이디 입력 시 자동 대문자 방지
         />
 
         {/* 비밀번호 입력창 */}
@@ -44,11 +64,15 @@ export default function LoginScreen() {
         />
 
         {/* 로그인 버튼 */}
-        <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.button}
+          activeOpacity={0.8}
+          onPress={handleLogin}
+        >
           <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
 
-        {/* 하단 링크 (비밀번호 찾기 등) */}
+        {/* 하단 링크 */}
         <View style={styles.linksContainer}>
           <Link href="/findPwd" asChild>
             <TouchableOpacity>
@@ -62,7 +86,6 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </Link>
           <Text style={styles.separator}>|</Text>
-          {/* '회원가입' 텍스트는 Link로 감싸서 /signup으로 이동시킵니다. */}
           <Link href="/signup" asChild>
             <TouchableOpacity>
               <Text style={styles.linkText}>회원가입</Text>
