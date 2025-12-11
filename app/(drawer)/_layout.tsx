@@ -1,40 +1,76 @@
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
-import { useNavigation, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router'; // useNavigation 제거
 import { Drawer } from 'expo-router/drawer';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 function CustomDrawerContent(props: any) {
     const router = useRouter();
-    const navigation = useNavigation();
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const handleConfirmLogout = () => {
+        setModalVisible(false);
+        router.replace('/');
+    };
 
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
-            {/* 메뉴창 헤더 (닫기 버튼 등) */}
+
+            {/* --- 로그아웃 모달 (Modal) --- */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>로그아웃</Text>
+                        <Text style={styles.modalMessage}>로그아웃 하시겠습니까?</Text>
+
+                        <View style={styles.modalButtonContainer}>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.confirmButton]}
+                                onPress={handleConfirmLogout}
+                            >
+                                <Text style={styles.confirmButtonText}>확인</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.cancelButton]}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.cancelButtonText}>취소</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+
+            {/* 메뉴창 헤더 */}
             <View style={styles.drawerHeader}>
-                {/* 왼쪽 상단 메뉴 아이콘 (누르면 닫힘) */}
                 <TouchableOpacity
-                    onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+                    onPress={() => props.navigation.toggleDrawer()}
                     style={styles.closeButton}
                 >
                     <Ionicons name="menu" size={30} color="#1b285c" />
                 </TouchableOpacity>
 
-                {/* (선택사항) 사용자 프로필이나 로고 등을 여기에 추가 */}
                 <Text style={styles.drawerTitle}>Menu</Text>
             </View>
 
-            {/* 메뉴 리스트 (Home, Delivery 등) */}
+            {/* 메뉴 리스트 */}
             <View style={styles.drawerList}>
                 <DrawerItemList {...props} />
             </View>
 
-            {/* 하단 로그아웃 버튼 (예시) */}
+            {/* 하단 로그아웃 버튼 */}
             <TouchableOpacity
                 style={styles.logoutButton}
-                onPress={() => router.replace('/')}
+                onPress={() => setModalVisible(true)}
             >
                 <Ionicons name="log-out-outline" size={24} color="#FF6B6B" />
                 <Text style={styles.logoutText}>로그아웃</Text>
@@ -43,30 +79,23 @@ function CustomDrawerContent(props: any) {
     );
 }
 
-// 2. 메인 드로어 레이아웃
 export default function DrawerLayout() {
-    const navigation = useNavigation();
-
     return (
         <Drawer
-            // 드로어 위치: 오른쪽
             screenOptions={{
-                headerShown: false, // 각 페이지의 헤더는 페이지 내부에서 직접 구현하거나 여기서 false 처리
-                drawerPosition: 'right', // 메뉴가 오른쪽에서 나옴
-                drawerType: 'front',     // 메뉴가 화면 위로 덮임
+                headerShown: false,
+                drawerPosition: 'right',
+                drawerType: 'front',
                 drawerStyle: {
-                    width: '80%',          // 메뉴 너비
+                    width: '80%',
                     backgroundColor: '#fff',
                 },
-                swipeEnabled: false,     // 손으로 밀어서 여는 것 방지 (버튼으로만 열기 원할 경우)
+                swipeEnabled: false,
             }}
-            // 위에서 만든 커스텀 디자인 적용
             drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
-            {/* 여기에 메뉴에 표시할 화면들을 등록합니다. */}
-
             <Drawer.Screen
-                name="home" // 파일명: home.tsx
+                name="home"
                 options={{
                     drawerLabel: 'Home',
                     drawerIcon: ({ color }) => <Ionicons name="home-outline" size={22} color={color} />
@@ -76,7 +105,7 @@ export default function DrawerLayout() {
             <Drawer.Screen
                 name="delivery"
                 options={{
-                    drawerLabel: 'Oreder',
+                    drawerLabel: 'Delivery Oreder',
                     drawerIcon: ({ color }) => <Ionicons name="cart-outline" size={22} color={color} />
                 }}
             />
@@ -90,27 +119,27 @@ export default function DrawerLayout() {
             />
 
             <Drawer.Screen
-                name="user_change"
+                name="history"
                 options={{
-                    drawerLabel: '내 정보 변경',
-                    drawerIcon: ({ color }) => <Ionicons name="person-outline" size={22} color={color} />
+                    drawerLabel: 'History',
+                    drawerIcon: ({ color }) => <Ionicons name="list-outline" size={22} color={color} />
                 }}
             />
 
-            {/* 메뉴에는 안 보이고 싶지만 기능상 필요한 화면들 */}
             <Drawer.Screen name="password-check" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="user_info" options={{ drawerItemStyle: { display: 'none' } }} />
+            <Drawer.Screen name="user_change" options={{ drawerItemStyle: { display: 'none' } }} />
         </Drawer>
     );
 }
 
 const styles = StyleSheet.create({
     drawerHeader: {
-        height: 100, // 헤더 높이
+        height: 100,
         backgroundColor: '#F5F7FA',
         flexDirection: 'row',
-        alignItems: 'center', // 세로 중앙 정렬 (수정됨)
-        paddingTop: 40, // 상태바 영역 확보
+        alignItems: 'center',
+        paddingTop: 40,
         paddingHorizontal: 20,
         borderBottomWidth: 1,
         borderBottomColor: '#E0E0E0',
@@ -142,5 +171,63 @@ const styles = StyleSheet.create({
         color: '#FF6B6B',
         fontWeight: 'bold',
     },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContainer: {
+        width: '80%',
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 25,
+        alignItems: 'center',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#1b285c',
+    },
+    modalMessage: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 25,
+        textAlign: 'center',
+    },
+    modalButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        gap: 10,
+    },
+    modalButton: {
+        flex: 1,
+        borderRadius: 25,
+        paddingVertical: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    confirmButton: {
+        backgroundColor: '#4966d5',
+    },
+    cancelButton: {
+        backgroundColor: '#becffe',
+    },
+    confirmButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    cancelButtonText: {
+        color: '#33499e',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
 });
-

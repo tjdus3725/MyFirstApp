@@ -1,8 +1,11 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
+  Alert, // 추가
+  FlatList // 추가
+  ,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   StatusBar,
@@ -24,44 +27,26 @@ interface FormField {
 export default function UserInfoChangeScreen() {
   const router = useRouter();
 
-  // 2. 폼 데이터 정의
+  // 1. 모달 상태 관리
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  // 2. 강의실 데이터 생성 (101~137, 301~338)
+  const roomData = [
+    ...Array.from({ length: 37 }, (_, i) => (101 + i).toString()),
+    ...Array.from({ length: 38 }, (_, i) => (301 + i).toString())
+  ];
+
   const formFieldsGroup1: FormField[] = [
-    {
-      id: "name",
-      label: "이름",
-      type: "text",
-      placeholder: "이름을 입력하세요",
-    },
-    {
-      id: "password",
-      label: "비밀번호",
-      type: "password",
-      placeholder: "비밀번호를 입력하세요",
-    },
-    {
-      id: "passwordConfirm",
-      label: "비밀번호 다시 입력하기",
-      type: "password",
-      placeholder: "비밀번호를 다시 입력하세요",
-    },
+    { id: "name", label: "이름", type: "text", placeholder: "이름을 입력하세요" },
+    { id: "password", label: "비밀번호", type: "password", placeholder: "비밀번호를 입력하세요" },
+    { id: "passwordConfirm", label: "비밀번호 다시 입력하기", type: "password", placeholder: "비밀번호를 다시 입력하세요" },
   ];
 
   const formFieldsGroup2: FormField[] = [
-    {
-      id: "phone",
-      label: "휴대폰 번호",
-      type: "tel",
-      placeholder: "휴대폰 번호를 입력하세요",
-    },
-    {
-      id: "address",
-      label: "소속 연구실 / 강의실 (주소)",
-      type: "text",
-      placeholder: "주소를 입력하세요",
-    },
+    { id: "phone", label: "휴대폰 번호", type: "tel", placeholder: "휴대폰 번호를 입력하세요" },
+    { id: "address", label: "소속 연구실 / 강의실 (주소)", type: "text", placeholder: "주소를 선택하세요" },
   ];
 
-  // 3. 상태 관리
   const [formData, setFormData] = useState<Record<string, string>>({
     name: "",
     password: "",
@@ -77,8 +62,13 @@ export default function UserInfoChangeScreen() {
     }));
   };
 
+  // 3. 강의실 선택 핸들러
+  const handleSelectRoom = (selectedRoom: string) => {
+    handleInputChange("address", selectedRoom);
+    setModalVisible(false);
+  };
+
   const handleSubmit = () => {
-    // 유효성 검사 (필요한 경우 조건 추가)
     if (!formData.name || !formData.password) {
       Alert.alert("알림", "필수 정보를 모두 입력해주세요.");
       return;
@@ -93,7 +83,6 @@ export default function UserInfoChangeScreen() {
         {
           text: "확인",
           onPress: () => {
-            // 저장 후 홈으로 이동 (뒤로가기 방지를 위해 replace 사용)
             router.replace('/(drawer)/home');
           }
         }
@@ -101,21 +90,37 @@ export default function UserInfoChangeScreen() {
     );
   };
 
-  // 4. 입력 필드 렌더링 헬퍼 함수
+  // 4. 입력 필드 렌더링 함수 (수정됨)
   const renderFields = (fields: FormField[]) => {
     return fields.map((field) => (
       <View key={field.id} style={styles.inputGroup}>
         <Text style={styles.label}>{field.label}</Text>
-        <TextInput
-          style={styles.input}
-          value={formData[field.id]}
-          onChangeText={(text) => handleInputChange(field.id, text)}
-          placeholder={field.placeholder}
-          placeholderTextColor="#CCCCCC"
-          secureTextEntry={field.type === 'password'}
-          keyboardType={field.type === 'tel' ? 'phone-pad' : 'default'}
-          autoCapitalize="none"
-        />
+
+        {/* 'address' 필드일 경우 버튼으로 표시, 아니면 입력창 표시 */}
+        {field.id === 'address' ? (
+          <TouchableOpacity
+            style={styles.selectButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={[
+              styles.inputText,
+              !formData[field.id] && { color: '#CCCCCC' }
+            ]}>
+              {formData[field.id] ? `${formData[field.id]}호` : field.placeholder}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TextInput
+            style={styles.input}
+            value={formData[field.id]}
+            onChangeText={(text) => handleInputChange(field.id, text)}
+            placeholder={field.placeholder}
+            placeholderTextColor="#CCCCCC"
+            secureTextEntry={field.type === 'password'}
+            keyboardType={field.type === 'tel' ? 'phone-pad' : 'default'}
+            autoCapitalize="none"
+          />
+        )}
       </View>
     ));
   };
@@ -156,6 +161,44 @@ export default function UserInfoChangeScreen() {
 
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* 5. 강의실 선택 모달 추가 */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>강의실 선택</Text>
+
+            <View style={styles.listContainer}>
+              <FlatList
+                data={roomData}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.modalItem}
+                    onPress={() => handleSelectRoom(item)}
+                  >
+                    <Text style={styles.modalItemText}>{item}호</Text>
+                  </TouchableOpacity>
+                )}
+                showsVerticalScrollIndicator={true}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalCloseText}>닫기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -203,6 +246,19 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E0E0E0',
     paddingBottom: 5,
   },
+  // 선택 버튼 스타일 (input과 동일하게 보이도록 설정)
+  selectButton: {
+    width: '100%',
+    height: 45,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    justifyContent: 'center',
+    paddingBottom: 5,
+  },
+  inputText: {
+    fontSize: 16,
+    color: '#000000',
+  },
   button: {
     width: '100%',
     height: 50,
@@ -220,6 +276,53 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#e3eafe',
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  // 모달 스타일
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '80%',
+    height: '60%',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#1b285c',
+  },
+  listContainer: {
+    flex: 1,
+    width: '100%',
+    marginBottom: 15,
+  },
+  modalItem: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    alignItems: 'center',
+  },
+  modalItemText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  modalCloseButton: {
+    backgroundColor: '#4966d5',
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  modalCloseText: {
+    color: '#fff',
     fontWeight: 'bold',
   },
 });

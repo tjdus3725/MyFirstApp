@@ -33,29 +33,31 @@ export default function MyPage() {
       <StatusBar barStyle="dark-content" />
       <ScrollView contentContainerStyle={styles.container}>
 
-        {/* 헤더 영역 */}
+        {/* 1. 헤더 영역 (Home 타이틀) */}
         <View style={styles.header}>
-          <Text style={styles.headerLogo}>RoboQuick</Text>
+          <Text style={styles.headerTitle}>Home</Text>
 
           <View style={styles.headerIcons}>
             <TouchableOpacity style={styles.iconButton}>
               <Ionicons name="notifications-outline" size={24} color="#1b285c" />
             </TouchableOpacity>
 
-            {/* 메뉴 버튼 */}
             <TouchableOpacity
               style={styles.iconButton}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             >
-              <Ionicons name="menu-outline" size={24} color="#1b285c" />
+              <Ionicons name="menu-outline" size={28} color="#1b285c" />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* 1. 빠른 주문 섹션 */}
+        {/* 구분선 (선택사항 - 디자인에 따라 제거 가능) */}
+        <View style={styles.divider} />
+
+        {/* 2. 빠른 주문 섹션 */}
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <MaterialCommunityIcons name="lightning-bolt-outline" size={24} color="#1b285c" />
+            <MaterialCommunityIcons name="lightning-bolt-outline" size={22} color="#1b285c" />
             <Text style={styles.sectionTitle}>빠른 주문</Text>
           </View>
 
@@ -73,17 +75,17 @@ export default function MyPage() {
             >
               <Text style={styles.lightBlueButtonText}>QR 보기</Text>
             </TouchableOpacity>
-
           </View>
         </View>
 
-        {/* 2. 프로필 섹션 */}
+        {/* 3. 프로필 섹션 */}
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <Ionicons name="person-outline" size={24} color="#1b285c" />
+            <Ionicons name="person-outline" size={22} color="#1b285c" />
             <Text style={styles.sectionTitle}>프로필</Text>
           </View>
 
+          {/* 회색 박스 카드 */}
           <View style={styles.card}>
             <View style={styles.profileInfoContainer}>
               {profileData.map((field, index) => (
@@ -97,7 +99,6 @@ export default function MyPage() {
             {/* 내 정보 변경 버튼 */}
             <TouchableOpacity
               style={styles.outlineButton}
-              // 만약 비밀번호 확인 페이지를 거쳐야 한다면 '/password-check'로 수정하세요
               onPress={() => router.push('/user_in')}
             >
               <Text style={styles.outlineButtonText}>내 정보 변경</Text>
@@ -105,10 +106,10 @@ export default function MyPage() {
           </View>
         </View>
 
-        {/* 3. 현재 주문 섹션 */}
+        {/* 4. 현재 주문 섹션 */}
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <Ionicons name="cart-outline" size={24} color="#1b285c" />
+            <Ionicons name="cart-outline" size={22} color="#1b285c" />
             <Text style={styles.sectionTitle}>현재 주문</Text>
           </View>
 
@@ -130,42 +131,52 @@ const styles = StyleSheet.create({
   container: {
     paddingBottom: 40,
   },
+  // 헤더 스타일
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    paddingHorizontal: 25,
+    paddingTop: 20,
+    paddingBottom: 15,
+    backgroundColor: '#fff',
   },
-  headerLogo: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#3F3D56',
+  headerTitle: {
+    fontSize: 34, // "Home" 글자 크게
+    fontWeight: '800', // 아주 굵게
+    color: '#1b285c', // 남색
   },
   headerIcons: {
     flexDirection: 'row',
     gap: 15,
+    alignItems: 'center',
   },
   iconButton: {
-    padding: 5,
+    padding: 0,
   },
+  divider: {
+    height: 1,
+    backgroundColor: '#F0F0F0',
+    marginHorizontal: 25,
+    marginBottom: 20,
+  },
+  // 섹션 공통
   section: {
-    marginTop: 30,
-    paddingHorizontal: 20,
+    marginBottom: 35,
+    paddingHorizontal: 25,
   },
   sectionTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    gap: 8,
+    gap: 6,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1b285c',
   },
+  // 버튼 스타일
   quickOrderButtons: {
     flexDirection: 'row',
     gap: 15,
@@ -173,64 +184,69 @@ const styles = StyleSheet.create({
   roundButton: {
     flex: 1,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 25, // 둥근 모서리
     justifyContent: 'center',
     alignItems: 'center',
   },
   blueButton: {
-    backgroundColor: '#4966d5',
+    backgroundColor: '#4966d5', // 진한 파란색
   },
   lightBlueButton: {
-    backgroundColor: '#becffe',
+    backgroundColor: '#becffe', // 연한 파란색
   },
   blueButtonText: {
-    color: '#e3eafe',
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
   lightBlueButtonText: {
-    color: '#33499e',
+    color: '#33499e', // 버튼 텍스트 색상
     fontSize: 16,
     fontWeight: 'bold',
   },
+  // 카드 (회색 박스) 스타일
   card: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#F7F7F7', // 아주 연한 회색 배경
     borderRadius: 20,
     padding: 25,
   },
   profileInfoContainer: {
     marginBottom: 20,
-    gap: 10,
+    gap: 12,
   },
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   profileLabel: {
-    width: 80,
+    width: 90,
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#0f193e',
+    color: '#1b285c',
   },
   profileValue: {
     fontSize: 15,
-    color: '#555',
+    color: '#888', // 회색 텍스트
   },
+  // 내 정보 변경 버튼 (테두리 버튼)
   outlineButton: {
-    height: 40,
-    borderRadius: 20,
+    height: 45,
+    borderRadius: 25,
     borderWidth: 1,
     borderColor: '#1b285c',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   outlineButtonText: {
     color: '#1b285c',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '600',
   },
   emptyText: {
-    color: '#888',
+    color: '#999',
     textAlign: 'center',
     fontSize: 14,
+    paddingVertical: 10,
   },
 });
