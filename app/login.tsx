@@ -18,7 +18,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    //빈 값 체크
     if (id.trim() === '') {
       Alert.alert('알림', '아이디를 입력해주세요.');
       return;
@@ -31,7 +30,7 @@ export default function LoginScreen() {
     Alert.alert('환영합니다', '로그인에 성공하였습니다.', [
       {
         text: '확인',
-        onPress: () => router.replace('/home')
+        onPress: () => router.replace('/(drawer)/home')
       }
     ]);
   };

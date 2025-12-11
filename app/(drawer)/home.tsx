@@ -1,4 +1,6 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; // 아이콘 라이브러리
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { DrawerActions } from '@react-navigation/native';
+import { useNavigation, useRouter } from 'expo-router';
 import React from 'react';
 import {
   ScrollView,
@@ -10,13 +12,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// 프로필 데이터 타입 정의
 interface ProfileField {
   label: string;
   value: string;
 }
 
 export default function MyPage() {
+  const router = useRouter();
+  const navigation = useNavigation();
+
   const profileData: ProfileField[] = [
     { label: "이름", value: "최서연" },
     { label: "아이디", value: "chltjdus" },
@@ -31,14 +35,18 @@ export default function MyPage() {
 
         {/* 헤더 영역 */}
         <View style={styles.header}>
-          {/* 로고 대신 텍스트나 아이콘 사용 */}
           <Text style={styles.headerLogo}>RoboQuick</Text>
 
           <View style={styles.headerIcons}>
             <TouchableOpacity style={styles.iconButton}>
               <Ionicons name="notifications-outline" size={24} color="#1b285c" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+
+            {/* 메뉴 버튼 */}
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+            >
               <Ionicons name="menu-outline" size={24} color="#1b285c" />
             </TouchableOpacity>
           </View>
@@ -52,12 +60,20 @@ export default function MyPage() {
           </View>
 
           <View style={styles.quickOrderButtons}>
-            <TouchableOpacity style={[styles.roundButton, styles.blueButton]}>
+            <TouchableOpacity
+              style={[styles.roundButton, styles.blueButton]}
+              onPress={() => router.push('/delivery')}
+            >
               <Text style={styles.blueButtonText}>주문하기</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.roundButton, styles.lightBlueButton]}>
+
+            <TouchableOpacity
+              style={[styles.roundButton, styles.lightBlueButton]}
+              onPress={() => router.push('/qr_code')}
+            >
               <Text style={styles.lightBlueButtonText}>QR 보기</Text>
             </TouchableOpacity>
+
           </View>
         </View>
 
@@ -78,7 +94,12 @@ export default function MyPage() {
               ))}
             </View>
 
-            <TouchableOpacity style={styles.outlineButton}>
+            {/* 내 정보 변경 버튼 */}
+            <TouchableOpacity
+              style={styles.outlineButton}
+              // 만약 비밀번호 확인 페이지를 거쳐야 한다면 '/password-check'로 수정하세요
+              onPress={() => router.push('/user_in')}
+            >
               <Text style={styles.outlineButtonText}>내 정보 변경</Text>
             </TouchableOpacity>
           </View>
@@ -109,7 +130,6 @@ const styles = StyleSheet.create({
   container: {
     paddingBottom: 40,
   },
-  // 헤더 스타일
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -131,7 +151,6 @@ const styles = StyleSheet.create({
   iconButton: {
     padding: 5,
   },
-  // 공통 섹션 스타일
   section: {
     marginTop: 30,
     paddingHorizontal: 20,
@@ -147,7 +166,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1b285c',
   },
-  // 버튼 스타일
   quickOrderButtons: {
     flexDirection: 'row',
     gap: 15,
@@ -175,9 +193,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  // 섹션 스타일 (프로필, 주문 등)
   card: {
-    backgroundColor: '#F5F7FA', 
+    backgroundColor: '#F5F7FA',
     borderRadius: 20,
     padding: 25,
   },
@@ -190,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileLabel: {
-    width: 80, // 라벨 너비 고정
+    width: 80,
     fontSize: 15,
     fontWeight: 'bold',
     color: '#0f193e',
