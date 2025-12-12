@@ -3,10 +3,8 @@ import { DrawerActions } from '@react-navigation/native';
 import { useNavigation, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert, // 추가
-  FlatList // 추가
-  ,
-
+  Alert,
+  FlatList,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -20,6 +18,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+// ---------------------------------------------------------
+// [중요] 서버 주소 설정 (윈도우 PC IP)
+// ---------------------------------------------------------
+const SERVER_URL = "http://192.168.100.30:8080";
+
 interface FormField {
   id: string;
   label: string;
@@ -31,7 +34,7 @@ export default function DeliveryScreen() {
   const router = useRouter();
   const navigation = useNavigation();
 
-  // 1. 모달 상태 변수 추가
+  // 1. 모달 상태 변수
   const [isModalVisible, setModalVisible] = useState(false);
 
   // 2. 강의실 데이터 생성 (101~137, 301~338)
@@ -60,19 +63,62 @@ export default function DeliveryScreen() {
     setModalVisible(false);
   };
 
-  const handleSubmit = () => {
+  // 4. [수정됨] 서버로 주문 전송 핸들러
+  const handleSubmit = async () => {
+    // 입력된 값 가져오기
     const recipientName = formFields.find(f => f.id === 'recipientName')?.value || "";
     const address = formFields.find(f => f.id === 'address')?.value || "";
     const orderItems = formFields.find(f => f.id === 'orderItems')?.value || "";
 
+    // 유효성 검사
     if (recipientName.trim() === "" || address.trim() === "" || orderItems.trim() === "") {
       Alert.alert("알림", "수령자 이름, 주소, 주문 물품은 필수 입력 항목입니다.");
       return;
     }
 
-    Alert.alert("주문 접수 완료", "성공적으로 주문이 접수되었습니다.", [
-      { text: "확인", onPress: () => router.replace('/(drawer)/home') }
-    ]);
+    // 서버 전송 로직 시작
+    try {
+      console.log(`[주문 전송] 대상 서버: ${SERVER_URL}`);
+
+      // 입력된 '상세 내용'이 있으면 괄호 안에 넣어서 메뉴명에 합침
+      const finalMenuName = orderDetails.trim()
+        ? `${orderItems} (${orderDetails})`
+        : orderItems;
+
+      // 이름과 호수를 합쳐서 ID로 사용 (예: 홍길동 [101호])
+      const finalUserId = `${recipientName} [${address}호]`;
+
+      const response = await fetch(`${SERVER_URL}/app/order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          menu: finalMenuName,  // 백엔드의 menu 필드
+          count: 1,             // 백엔드의 count 필드 (기본 1)
+          user_id: finalUserId  // 백엔드의 user_id 필드
+        }),
+      });
+
+      // 응답 처리
+      const json = await response.json();
+
+      if (response.ok) {
+        Alert.alert("주문 접수 완료", "서버에 주문이 정상적으로 등록되었습니다.", [
+          { text: "확인", onPress: () => router.replace('/(drawer)/home') }
+        ]);
+      } else {
+        // 서버가 400, 500 에러를 보냈을 때
+        Alert.alert("오류", "서버 응답 실패: " + (json.detail || "알 수 없는 오류"));
+      }
+
+    } catch (error) {
+      console.error("서버 연결 실패:", error);
+      Alert.alert(
+        "연결 실패",
+        "서버와 연결할 수 없습니다.\n1. PC IP가 192.168.100.30 인지 확인하세요.\n2. PC 방화벽을 잠시 끄고 시도해보세요."
+      );
+    }
   };
 
   return (
@@ -116,7 +162,7 @@ export default function DeliveryScreen() {
                       <Text style={styles.labelText}>{field.label}</Text>
                     </View>
 
-                    {/* 👇 [수정됨] 주소 필드는 버튼으로, 나머지는 입력창으로 표시 */}
+                    {/* 주소 필드는 버튼으로, 나머지는 입력창으로 표시 */}
                     {field.id === 'address' ? (
                       <TouchableOpacity
                         style={styles.selectButton}
@@ -280,7 +326,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#D1D1D1',
   },
-  // 선택 버튼 스타일 (input과 동일하게 보이도록)
   selectButton: {
     flex: 1,
     paddingVertical: 8,
@@ -323,7 +368,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  // 모달 스타일
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
