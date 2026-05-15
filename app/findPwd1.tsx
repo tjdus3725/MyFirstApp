@@ -17,13 +17,26 @@ export default function FindPasswordScreen() {
   const [id, setId] = useState('');
   const [phone, setPhone] = useState('');
 
-  // 비밀번호 변경 버튼 클릭 시 실행
-  const handleChangePassword = () => {
+  // 본인확인 버튼 클릭 시 실행
+  const handleVerifyIdentity = () => {
+    // 입력값 검증
+    if (!name.trim() || !id.trim() || !phone.trim()) {
+      Alert.alert("입력 오류", "모든 정보를 입력해주세요.");
+      return;
+    }
+
+    // 휴대폰 번호 형식 검증 (10-11자리 숫자)
+    const phoneRegex = /^\d{10,11}$/;
+    if (!phoneRegex.test(phone.replace(/-/g, ''))) {
+      Alert.alert("입력 오류", "올바른 휴대폰 번호를 입력해주세요.");
+      return;
+    }
+
     Alert.alert(
-      "비밀번호 변경",
-      "비밀번호 변경이 완료되었습니다. 로그인 페이지로 이동합니다.",
+      "본인확인",
+      "본인확인이 완료되었습니다. 비밀번호 변경 페이지로 이동합니다.",
       [
-        { text: "확인", onPress: () => router.push('/login') } // 로그인 페이지로 이동
+        { text: "확인", onPress: () => router.push('/findPwd2') } // 비밀번호 변경 페이지로 이동
       ]
     );
   };
@@ -63,9 +76,9 @@ export default function FindPasswordScreen() {
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
-          onPress={handleChangePassword}
+          onPress={handleVerifyIdentity}
         >
-          <Text style={styles.buttonText}>비밀번호 변경</Text>
+          <Text style={styles.buttonText}>본인확인 하기</Text>
         </TouchableOpacity>
 
       </ScrollView>

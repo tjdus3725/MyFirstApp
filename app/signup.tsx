@@ -11,6 +11,8 @@ import {
 
 
 
+
+
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -43,7 +45,7 @@ export default function SignupScreen() {
   const range2 = Array.from({ length: 38 }, (_, i) => (301 + i).toString());
   const roomData = [...range1, ...range2];
 
-  const SERVER_URL = 'http://192.168.1.161:8000/signup';
+  const SERVER_URL = 'http://192.168.11.25:8000/signup';
 
   // 회원가입 버튼 클릭 시 실행 (서버 통신 로직)
   const handleSignUp = async () => {

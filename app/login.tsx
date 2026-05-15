@@ -18,10 +18,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (id.trim() === '') {
-      Alert.alert('알림', '아이디를 입력해주세요.');
-      return;
-    }
+
     if (password.trim() === '') {
       Alert.alert('알림', '비밀번호를 입력해주세요.');
       return;
@@ -73,7 +70,7 @@ export default function LoginScreen() {
 
         {/* 하단 링크 */}
         <View style={styles.linksContainer}>
-          <Link href="/findPwd" asChild>
+          <Link href="/findPwd1" asChild>
             <TouchableOpacity>
               <Text style={styles.linkText}>비밀번호 찾기</Text>
             </TouchableOpacity>

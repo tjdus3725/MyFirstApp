@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { useRouter } from 'expo-router'; // useNavigation 제거
+import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -97,7 +97,7 @@ export default function DrawerLayout() {
             <Drawer.Screen
                 name="home"
                 options={{
-                    drawerLabel: 'Home',
+                    drawerLabel: 'Home', headerShown: false,
                     drawerIcon: ({ color }) => <Ionicons name="home-outline" size={22} color={color} />
                 }}
             />
@@ -129,6 +129,15 @@ export default function DrawerLayout() {
             <Drawer.Screen name="password-check" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="user_info" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="user_change" options={{ drawerItemStyle: { display: 'none' } }} />
+
+            {/* order 화면 설정: 메뉴에서 숨기고 헤더 없애기 */}
+            <Drawer.Screen
+                name="order"
+                options={{
+                    drawerItemStyle: { display: 'none' }, // 서랍 메뉴에서 안 보이게 숨김
+                    headerShown: false // 커스텀 화살표 헤더를 위해 기본 헤더 숨김
+                }}
+            />
         </Drawer>
     );
 }
